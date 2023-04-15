@@ -17,6 +17,21 @@ export default class App extends Component {
               <li className="nav-item">
                 <a className="nav-link" href="/about">About</a>
               </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/business">Business</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/sports">Sports</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/technology">Technology</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/entertainmentout">Entertainment</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/science">Science</a>
+              </li>
             </ul>
           </div>
         </div>

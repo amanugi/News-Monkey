@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import NewsItem from './NewsItem';
+import Spinner from './Spinner';
 
 export class News extends Component {
 
@@ -15,13 +16,16 @@ export class News extends Component {
 
   async componentDidMount() {
     //console.log("cdm");
-    let url = "https://newsapi.org/v2/top-headlines?country=in&apiKey=a0ac1c06f73143708531fda393972cd7&page=1&pageSize=9";
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=a0ac1c06f73143708531fda393972cd7&page=1&pageSize=${this.props.pageSize}`;
+    this.setState({loading: true});
     let data = await fetch(url);
     let parsedData = await data.json();
+    
     this.setState({
       articles: 
       parsedData.articles,
-      totalResults: parsedData.totalResults
+      totalResults: parsedData.totalResults,
+      loading: false
     });
     
     //console.log(parsedData);
@@ -30,13 +34,16 @@ export class News extends Component {
   handlePrevClick = async () =>{
     //console.log("Previous click");
 
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=a0ac1c06f73143708531fda393972cd7&page=${this.state.page - 1}&pageSize=9`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=a0ac1c06f73143708531fda393972cd7&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
+    this.setState({loading: true});
     let data = await fetch(url);
     let parsedData = await data.json();
+    
     this.setState({
       articles: 
       parsedData.articles,
-      page: this.state.page-1
+      page: this.state.page-1,
+      loading: false
     });
 
   }
@@ -44,16 +51,15 @@ export class News extends Component {
   handleNextClick = async () => {
     //console.log("Next click");
 
-    if(this.state.page+1 > (Math.ceil(this.state.totalResults/9))){
-      // do nothing
-    }
-    else{
-      let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=a0ac1c06f73143708531fda393972cd7&page=${this.state.page + 1}&pageSize=9`;
+    if(!(this.state.page+1 > (Math.ceil(this.state.totalResults/this.props.pageSize)))){
+      let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=a0ac1c06f73143708531fda393972cd7&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
+      this.setState({loading: true});
       let data = await fetch(url);
       let parsedData = await data.json();
       this.setState({
         articles:  parsedData.articles,
         page: this.state.page + 1,
+        loading: false
       });
     }
   }
@@ -62,9 +68,10 @@ export class News extends Component {
     //console.log("render");
     return (
       <div className='container my-3'>
-        <h2>NewsMonkey - Top Headlines</h2>
+        <h1 className='text-center my-4'>NewsMonkey - Top Headlines</h1>
+        {this.state.loading && <Spinner />}
         <div className="row">
-          {this.state.articles.map( (article) => {
+          {!this.state.loading && this.state.articles.map( (article) => {
             return article.urlToImage && <div className="col-md-4" key={article.url}>
               <NewsItem title = {article.title ? article.title.slice(0,45) : ""} 
                         description = {article.description ? article.description.slice(0,85) : ""} 
@@ -76,7 +83,7 @@ export class News extends Component {
         </div>
         <div className="container d-flex justify-content-between my-3">
           <button disabled={this.state.page <= 1} type="button" className="btn btn-secondary" onClick={this.handlePrevClick}>&larr; Previous</button>
-          <button disabled={this.state.page > this.state.totalResults/9} type="button" className="btn btn-secondary" onClick={this.handleNextClick}>Next &rarr;</button>
+          <button disabled={this.state.page > this.state.totalResults/this.props.pageSize} type="button" className="btn btn-secondary" onClick={this.handleNextClick}>Next &rarr;</button>
         </div>
       </div>
     )
