@@ -5,6 +5,10 @@
   z-index: 1;
 } */
 
+.headline {
+  font-family:Arial, Helvetica, sans-serif ;
+}
+
 .App {
   text-align: center;
 }
