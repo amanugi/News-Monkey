@@ -9,16 +9,14 @@ import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
 
 const App = () => {
-  const apiKey = process.env.REACT_APP_NEWS_API
-  
+  const apiKey = process.env.REACT_APP_NEWS_API;
   const pageSize = 6;
 
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(0);   // function based
   // state = {
   //   progress: 0
   // }
 
-  setProgress(progress);    // function based
 
   // const setProgress = (progress) => {     // class based
   //   // setState({
